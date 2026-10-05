@@ -14,37 +14,21 @@
 }
 
 html {
-  /* Blochează jocul și reculul haotic pe mobil */
-  overscroll-behavior-y: none;
-  -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   scrollbar-width: thin;
   scrollbar-color: #333 #080808;
-  overflow-x: hidden;
-}
-
-/* Activăm smooth scroll doar pe ecrane care folosesc maus (Desktop), nu pe telefoane tactile */
-@media (hover: hover) and (pointer: fine) {
-  html {
-    scroll-behavior: smooth;
-  }
 }
 
 body {
   margin: 0;
   background-color: var(--bg);
   color: #ffffff;
-  overflow-x: hidden;
-  overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: touch;
-  width: 100%;
-  position: relative;
+  min-height: 100vh;
 }
 
 .main {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 /* Custom scrollbar (webkit) */
