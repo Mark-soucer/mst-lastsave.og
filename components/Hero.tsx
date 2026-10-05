@@ -13,19 +13,25 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [mounted, setMounted] = useState(false);
   const [reduced, setReduced] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [inView, setInView] = useState(true);
 
   useEffect(() => {
-    const checkMedia = () => {
-      setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMedia();
+    setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     setMounted(true);
+  }, []);
 
-    window.addEventListener('resize', checkMedia, { passive: true });
-    return () => window.removeEventListener('resize', checkMedia);
+  // Oprește randarea canvas-ului 3D când secțiunea iese din ecran, ca să nu
+  // consume GPU/CPU în fundal și să provoace lag la scroll mai jos pe pagină.
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: '200px 0px' }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -33,13 +39,9 @@ export default function Hero() {
     offset: ['start start', 'end start'],
   });
 
-  const rawY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const ySpring = useSpring(rawY, { stiffness: 120, damping: 30 });
-  
-  // Pe mobil dezactivăm transformările continue la scroll ca să nu existe sacadări
-  const yContent = isMobile ? 0 : ySpring;
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, isMobile ? 1 : 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, isMobile ? 1 : 0.96]);
+  const yContent = useSpring(useTransform(scrollYProgress, [0, 1], [0, 120]), { stiffness: 120, damping: 30 });
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
 
   return (
     <section
@@ -48,43 +50,43 @@ export default function Hero() {
       className="relative overflow-hidden bg-[#080808]"
       aria-label="Hero - MST SERVICE"
     >
-      {/* 3D background doar pe Desktop; gradient ușor pe Mobil */}
-      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
-        {!reduced && mounted && !isMobile ? (
+      {/* 3D background */}
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        {!reduced && mounted && inView ? (
           <Suspense fallback={null}>
             <ThreeHero />
           </Suspense>
         ) : (
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(213,0,0,0.22),transparent_65%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(213,0,0,0.18),transparent_60%)]" />
         )}
       </div>
 
       {/* Gradient overlay */}
       <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-[#080808]/90 via-[#080808]/50 to-[#080808]"
+        className="absolute inset-0 z-[1] bg-gradient-to-b from-[#080808]/90 via-[#080808]/50 to-[#080808]"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_80%_20%,rgba(213,0,0,0.15),transparent_55%)]"
+        className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_80%_20%,rgba(213,0,0,0.15),transparent_55%)]"
         aria-hidden="true"
       />
 
       {/* Grid */}
       <div
-        className="pointer-events-none absolute inset-0 z-[1] opacity-[0.18] [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_70%)]"
+        className="absolute inset-0 z-[1] opacity-[0.18] [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_70%)]"
         aria-hidden="true"
       />
 
       {/* Light streak */}
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 z-[1] h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,26,26,0.12),transparent_60%)] blur-2xl"
+        className="absolute left-1/2 top-1/2 z-[1] h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,26,26,0.12),transparent_60%)] blur-2xl"
         aria-hidden="true"
       />
 
       {/* Content */}
       <motion.div
         style={{ y: yContent, opacity, scale }}
-        className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-7xl flex-col items-center justify-center overflow-x-hidden px-5 pt-24 pb-16 text-center md:px-8 will-change-transform"
+        className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-7xl flex-col items-center justify-center overflow-x-hidden px-5 pt-24 pb-16 text-center md:px-8"
       >
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -103,12 +105,13 @@ export default function Hero() {
           transition={{ delay: 0.35, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="group relative mb-8 flex flex-col items-center"
         >
-          {/* Ambient red halo */}
+          {/* Ambient red halo backglow behind the letters */}
           <div
-            className="pointer-events-none absolute left-1/2 top-1/2 h-44 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,26,26,0.35),transparent_70%)] blur-2xl transition-all duration-700 group-hover:scale-125"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-44 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,26,26,0.35),transparent_70%)] blur-2xl transition-all duration-700 group-hover:scale-125 group-hover:bg-[radial-gradient(ellipse_at_center,rgba(255,26,26,0.5),transparent_70%)]"
             aria-hidden="true"
           />
 
+          {/* Clean Transparent Logo directly blended into the dark background */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/logo-mst-transparent.png"
@@ -177,3 +180,4 @@ export default function Hero() {
     </section>
   );
 }
+
