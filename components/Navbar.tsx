@@ -81,7 +81,7 @@ export default function Navbar() {
         className={
           'fixed inset-x-0 top-0 z-50 transition-all duration-500 ' +
           (scrolled
-            ? 'border-b border-white/10 bg-[#080808]/85 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
+            ? 'border-b border-white/10 bg-[#080808] shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
             : 'border-b border-transparent bg-transparent')
         }
       >
