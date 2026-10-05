@@ -1,38 +1,14 @@
 'use client';
 
-import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowDown, ChevronRight, Calendar } from 'lucide-react';
 import Button from '@/components/Button';
 import { useAppointment } from '@/context/AppointmentContext';
 
-const ThreeHero = lazy(() => import('@/components/three/ThreeHero'));
-
 export default function Hero() {
   const { openAppointment } = useAppointment();
   const sectionRef = useRef<HTMLElement>(null);
-  const [mounted, setMounted] = useState(false);
-  const [reduced, setReduced] = useState(false);
-  const [inView, setInView] = useState(true);
-
-  useEffect(() => {
-    setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    setMounted(true);
-  }, []);
-
-  // Oprește randarea canvas-ului 3D când secțiunea iese din ecran, ca să nu
-  // consume GPU/CPU în fundal și să provoace lag la scroll mai jos pe pagină.
-  useEffect(() => {
-    const node = sectionRef.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin: '200px 0px' }
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -50,15 +26,9 @@ export default function Hero() {
       className="relative overflow-hidden bg-[#080808]"
       aria-label="Hero - MST SERVICE"
     >
-      {/* 3D background */}
+      {/* Fundal — gradient static (fără animație 3D) */}
       <div className="absolute inset-0 z-0" aria-hidden="true">
-        {!reduced && mounted && inView ? (
-          <Suspense fallback={null}>
-            <ThreeHero />
-          </Suspense>
-        ) : (
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(213,0,0,0.18),transparent_60%)]" />
-        )}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(213,0,0,0.18),transparent_60%)]" />
       </div>
 
       {/* Gradient overlay */}
@@ -169,7 +139,7 @@ export default function Hero() {
         className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2"
       >
         <motion.div
-          animate={reduced ? {} : { y: [0, 10, 0] }}
+          animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           className="flex flex-col items-center gap-1 text-[#A0A0A0]"
         >
