@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { ArrowRight, Eye } from 'lucide-react';
 import SectionHeading from '@/components/SectionHeading';
 import ServiceModal from '@/components/ServiceModal';
@@ -32,15 +31,11 @@ export default function Services() {
         />
 
         <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {SERVICES.map((service, i) => {
+          {SERVICES.map((service) => {
             const Icon = service.icon;
             return (
-              <motion.article
+              <article
                 key={service.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ delay: (i % 4) * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:border-[#FF1A1A]/40 hover:bg-white/[0.05] hover:shadow-[0_20px_60px_-15px_rgba(213,0,0,0.4)]"
               >
                 <Link
@@ -80,7 +75,7 @@ export default function Services() {
                     <Eye className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>
-              </motion.article>
+              </article>
             );
           })}
         </div>
