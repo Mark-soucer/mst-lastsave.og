@@ -16,10 +16,6 @@ export default function CarListingGrid({ cars }: { cars: CarRecord[] }) {
       {cars.map((car, i) => (
         <motion.div
           key={car.id}
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ delay: (i % 6) * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:border-[#FF1A1A]/40 hover:shadow-[0_20px_60px_-15px_rgba(213,0,0,0.4)]"
         >
           <Link href={`/masini-de-vanzare/${car.id}`} className="absolute inset-0 z-20" aria-label={`${car.make} ${car.model}`} />
