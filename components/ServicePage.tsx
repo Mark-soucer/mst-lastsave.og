@@ -1,4 +1,4 @@
-'use client';
+a'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
@@ -29,10 +29,6 @@ type IntroCardProps = {
 function IntroCard({ icon: Icon, title, items }: IntroCardProps) {
   return (
     <motion.article
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="h-full rounded-2xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur"
     >
       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#D50000]/20 to-transparent text-[#FF1A1A] ring-1 ring-white/10">
@@ -174,10 +170,6 @@ export default function ServicePage({ service }: ServicePageProps) {
               return (
                 <motion.article
                   key={feature.title}
-                  initial={{ opacity: 0, y: 32 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-80px' }}
-                  transition={{ delay: (index % 3) * 0.08, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                   className="group rounded-2xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:border-[#FF1A1A]/40 hover:bg-white/[0.05] hover:shadow-[0_20px_60px_-15px_rgba(213,0,0,0.4)]"
                 >
                   <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-[#D50000]/20 to-transparent text-[#FF1A1A] ring-1 ring-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(255,26,26,0.4)]">
@@ -208,10 +200,6 @@ export default function ServicePage({ service }: ServicePageProps) {
               return (
                 <motion.article
                   key={advantage.title}
-                  initial={{ opacity: 0, y: 32 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-80px' }}
-                  transition={{ delay: (index % 5) * 0.07, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                   className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:border-[#FF1A1A]/40"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#D50000]/20 to-transparent text-[#FF1A1A] ring-1 ring-white/10">
@@ -242,10 +230,6 @@ export default function ServicePage({ service }: ServicePageProps) {
                 {service.gallery.projects.map((project, index) => (
                   <motion.figure
                     key={project.id}
-                    initial={{ opacity: 0, y: 32 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ delay: (index % 2) * 0.1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                     className="group"
                   >
                     <BeforeAfterSlider
@@ -278,10 +262,6 @@ export default function ServicePage({ service }: ServicePageProps) {
                 {service.gallery.images.map((image, index) => (
                   <motion.figure
                     key={image.src}
-                    initial={{ opacity: 0, y: 32 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ delay: (index % 2) * 0.1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                     className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#111]"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden">
@@ -319,10 +299,6 @@ export default function ServicePage({ service }: ServicePageProps) {
               return (
                 <motion.div
                   key={item.question}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ duration: 0.5, delay: index * 0.04 }}
                   className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]"
                 >
                   <button
